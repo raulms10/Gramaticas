@@ -521,7 +521,7 @@ public class TransicionesFrame extends javax.swing.JFrame implements MouseListen
         cod = (String) estado.getModelTable().getValueAt(fila, col);
         //System.out.println("Cod: " + cod);
         Transicion t = reconocedor.obtenerTransicion(cod);
-        System.out.println("Cod " + t.getCodigo());
+        //System.out.println("Cod " + t.getCodigo());
         return t;
     }
 

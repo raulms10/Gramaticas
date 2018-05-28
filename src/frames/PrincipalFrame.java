@@ -74,6 +74,11 @@ public class PrincipalFrame extends javax.swing.JFrame {
         this.fileChooser.setFileFilter(filter);
     }
     
+    /**
+     * Agregra una producción a la Tabla de la Gramática
+     * @param ladoIzq
+     * @param ladoDer 
+     */
     private void agregarProduccion(String ladoIzq, String ladoDer){
         this.numPn = this.numPn + 1; //actualizamos la cantdad de instrucciones
         String valoresPn[] = {"","","",""}; 
@@ -85,6 +90,9 @@ public class PrincipalFrame extends javax.swing.JFrame {
         this.tableGramatica.setModel(this.modelTable);//actualizamos la vista
     }
     
+    /**
+     * Vauelve a los valores por defecto de la Gramtatica
+     */
     private void reiniciarGramatica(){
         this.modelTable.setRowCount(0); //eliminamos todas las filas de la gramatica
         this.numPn = 0;//reiniciamos el numero de producciones
@@ -93,6 +101,9 @@ public class PrincipalFrame extends javax.swing.JFrame {
         this.tableGramatica.setModel(this.modelTable);//actualizamos el modelo
     }
     
+    /**
+     * Agrega el símbolo de secuencia nula al lado derecho de una producción
+     */
     private void agregarSecuenciaNula(){
         int fila = this.tableGramatica.getSelectedRow();
         int col = this.tableGramatica.getSelectedColumn();
@@ -116,6 +127,10 @@ public class PrincipalFrame extends javax.swing.JFrame {
         this.list_transiciones = new ArrayList<>();
     }
     
+    /**
+     * Valida que no existan campos (ladoIzq o ladoDer) sin completar
+     * @return true si se escribio algo
+     */
     private boolean comprobarG(){
         list_producciones = new ArrayList<>();
         Produccion p;
@@ -169,7 +184,13 @@ public class PrincipalFrame extends javax.swing.JFrame {
             }
         }
         return this.pila.empty();
-    };
+    }
+
+    /**
+     * Comprueba la sintaxis de la produccion
+     * @param prod representa del ladoDerecho
+     * @return true si es correcto
+     */
     private boolean validarDer(String prod){
         this.pila = new Stack();
         int longitud = prod.length(), i;
@@ -209,6 +230,12 @@ public class PrincipalFrame extends javax.swing.JFrame {
         return true;
     }
     
+    /**
+     * Comprueba que la Gramtaica no le falten producciones por llenar
+     * y que se hayan escrito bien, a demas elimina las producciones que
+     * sean exactamente iguales
+     * @return 
+     */
     private boolean validarGramatica(){
         if(comprobarG() && esValidaG()){//comprobamos de la gramatica tenga e todos sus campos algo digitado y que se haya digitado correctamente
             eliminarPnesIguales();//eliminamos las producciones iguales
@@ -217,6 +244,10 @@ public class PrincipalFrame extends javax.swing.JFrame {
         return false;
     }
     
+    /**
+     * Valida que la sintaxis con que se llenó la Gramatica sea correcta
+     * @return true si es correcta
+     */
     private boolean esValidaG(){
         int i; 
         for(i=0; i<this.numPn; i++){
@@ -232,6 +263,9 @@ public class PrincipalFrame extends javax.swing.JFrame {
         return true;
     }
     
+    /**
+     * Elimina las producciones que sean exactamente iguales
+     */
     private void eliminarPnesIguales(){
         int i, j;
         String eleIzq1, eleDer1, eleIzq2, eleDer2;
@@ -256,6 +290,9 @@ public class PrincipalFrame extends javax.swing.JFrame {
         this.tableGramatica.setModel(this.modelTable);
     }
     
+    /**
+     * Crea la lista simbolos de entrada
+     */
     private void actualizarSimbolosEntrada(){
         for (Produccion produccion : list_producciones) {
             for (String terminal : produccion.getTerminales()) {
@@ -266,10 +303,19 @@ public class PrincipalFrame extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Comprueba que el simbolo exista en la respectiva lista
+     * @param simbolo
+     * @param lista
+     * @return true si el simbolo existe
+     */
     private boolean existeSimbolo(String simbolo, List<String> lista){
         return lista.stream().anyMatch((s) -> (simbolo.equals(s)));
     }
     
+    /**
+     * Crea la lista de simbolos en la pila
+     */
     private void actualizarSimbolosPila(){
         list_producciones.stream().filter((p) -> (!existeSimbolo(p.getLadoIzq(), list_simbolosPila))).forEachOrdered((p) -> {
             list_simbolosPila.add(p.getLadoIzq());
@@ -294,12 +340,18 @@ public class PrincipalFrame extends javax.swing.JFrame {
         //Terminal que pertenezca a Alfa o Beta
     }
     
+    /**
+     * Muestra los datos de la Gramatica en la consola
+     */
     private void mostrarGramatica(){
         for (Produccion p : this.list_producciones) {
             System.out.println("P: " + p.getLadoIzq() + " I: " + p.getLadoDer() +  " T: " + p.isIniciaConTerminal());
         }
     }
     
+    /**
+     * Crea la lista de símbolos de la Transiciones
+     */
     private void actualizarTransiciones(){
         Transicion transicion = new Transicion();
         //Seteamos los datos a la Transición
@@ -311,7 +363,9 @@ public class PrincipalFrame extends javax.swing.JFrame {
         //this.list_transiciones.add(transicion);
     }
     
-    
+    /**
+     * Bucas los nodos no terminales que sean anulables
+     */
     private void encuentreNoTerminalesAnulables(){
         List<String> anulables = new ArrayList<>();
         for (Produccion p : this.list_producciones) {
@@ -327,6 +381,11 @@ public class PrincipalFrame extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Valida si un nodo no Terminal es anulable o no
+     * @param noTerminal
+     * @return true si es anulable
+     */
     private boolean esAnulable(String noTerminal){
         for (Produccion p : this.list_producciones) {
             if(Reconocedor.SECUENCIA_NULA.equals(p.getLadoDer()) && noTerminal.equals(p.getLadoIzq())){
