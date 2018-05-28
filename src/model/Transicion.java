@@ -7,7 +7,7 @@ package model;
 
 /**
  * Para crear cada una de las Transicones de cada Estado
- * @author alejandro.gallego
+ * @author alejandro.gallegoc
  */
 public class Transicion {
     private String posicionTabla;

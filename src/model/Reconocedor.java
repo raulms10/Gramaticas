@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @author alejandro.gallego
+ * @author alejandro.gallegoc
  */
 public class Reconocedor {
 

@@ -35,7 +35,7 @@ import model.Transicion;
 
 /**
  *
- * @author alejandro.gallego
+ * @author alejandro.gallegoc
  */
 public class TransicionesFrame extends javax.swing.JFrame implements MouseListener {
 

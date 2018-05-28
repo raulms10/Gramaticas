@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  * Para crear todos los Estados del Reconocedor
  *
- * @author alejandro.gallego
+ * @author alejandro.gallegoc
  */
 public class Estado implements MouseListener {
 
