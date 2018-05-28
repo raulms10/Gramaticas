@@ -406,7 +406,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
     private void crearReconocedor() {   
         actualizarSimbolosEntrada();
         actualizarSimbolosPila();
-        String confInicial = tableGramatica.getValueAt(0, 1).toString();// + Reconocedor.PILA_VACIA;
+        String confInicial = tableGramatica.getValueAt(0, 1).toString().toUpperCase();// + Reconocedor.PILA_VACIA;
         actualizarTransiciones();
         encuentreNoTerminalesAnulables();
         
