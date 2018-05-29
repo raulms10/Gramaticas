@@ -143,7 +143,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
                 mostrarMensaje("Debe completar el Lado Izquierdo de la Producción " + String.valueOf(i+1), "Error, Gramática incompleta...", JOptionPane.ERROR_MESSAGE);
                 return false;//y decimos que no se ha digitado completamente la gramatica
             }else{
-                p.setLadoIzq(valor.toString().replace(" ", ""));//quitamos los espacios en blanco que se hayan digitado
+                p.setLadoIzq(valor.toString().replace(" ", "").toUpperCase());//quitamos los espacios en blanco que se hayan digitado
                 this.modelTable.setValueAt(valor.toString().replace(" ", ""), i, 1);//actualizamos el valor en la gramatica
             }
             valor = this.modelTable.getValueAt(i, 3); //obtenemos el lado derecho de cada produccion

@@ -25,6 +25,7 @@ public class Reconocedor {
     private Estado estado;
     private List<Transicion> transiciones; //Transaciones que el usuario ha usado
     private List<Produccion> producciones;
+    private List<String> conjuntoSeleccion;
 
     public List<Produccion> getProducciones() {
         return producciones;
@@ -138,10 +139,11 @@ public class Reconocedor {
                 trans.setSimboloEntrada(sEntrada);
                 trans.setSimboloPila(sPila);
                 for (Produccion p : this.getProducciones()) {
-                    if(p.getLadoDer().startsWith(sEntrada) && p.getLadoIzq().equals(sPila)){
+                    if(p.getLadoIzq().toUpperCase().equals(sPila)){
                         trans.setCodigo("#"+k);
-                        trans.setOperacionEntrada("Avance");
-                        if(p.getLadoDer().length() > 1){
+                       
+                        if(p.getLadoDer().startsWith(sEntrada) && p.getLadoDer().length() > 1){
+                            trans.setOperacionEntrada("Avance");
                             value = p.getLadoDer().substring(1);
                             value = value.replace("<", "a");
                             value = value.replace(">", "b");
@@ -149,9 +151,16 @@ public class Reconocedor {
                             value = value.replace("b", "<");
                             texto = "Replace('" + Reconocedor.reverse(value) + "'), Avance";
                             trans.setOperacionPila("Replace('" + Reconocedor.reverse(value) + "')");
+                            trans.setOperacionEntrada("Avance");
                             break;
-                        }else{
+                        }else if (p.getLadoDer().equals(sEntrada)){
                             texto = "Desapile, Avance";
+                            trans.setOperacionPila("Desapile");
+                            trans.setOperacionEntrada("Avance");
+                        }else if (p.getLadoDer().equals(Reconocedor.SECUENCIA_NULA) && estaConjuntoSeleccion(p.getLadoIzq().toUpperCase(),sEntrada)){
+                            texto = "Desapile, Retenga";
+                            trans.setCodigo("#"+k);
+                            trans.setOperacionEntrada("Retenga");
                             trans.setOperacionPila("Desapile");
                         }
                     }
@@ -160,6 +169,7 @@ public class Reconocedor {
                     //trans.setCodigo("#"+k);
                     //trans.setOperacionEntrada("Replce");
                     //trans.setOperacionPila("Desapile");
+                //}else if(S){
                 }else if(sPila.equals(sEntrada)){
                     texto  = "Desapile, Avance";
                     trans.setCodigo("#"+k);
@@ -170,7 +180,7 @@ public class Reconocedor {
                     trans.setCodigo(" A");
                     trans.setOperacionEntrada("Acepte");
                     trans.setOperacionPila("Acepte");
-                } else{
+                } else if (trans.getOperacionEntrada() == null || trans.getOperacionEntrada().equals("")){
                     texto = " Rechace";
                     trans.setCodigo(" R");
                     trans.setOperacionEntrada("Rechace");
@@ -208,6 +218,15 @@ public class Reconocedor {
         });
         Collections.sort(transicionesBasicas);
         return transicionesBasicas;
+    }
+    
+    private boolean estaConjuntoSeleccion(String ladoIzq, String simbolo){
+        for (Produccion p : this.producciones) {
+            if (ladoIzq.equals(p.getLadoIzq()) && (p.getLadoDer().startsWith(simbolo) || (simbolo.equals(FIN_SECUENCIA) && p.getLadoDer().equals(SECUENCIA_NULA)) )){
+                return true;
+            }
+        }
+        return false;
     }
     
     public static String reverse(String palabra) {
